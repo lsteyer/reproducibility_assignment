@@ -1,0 +1,133 @@
+---
+title: "Reproducibility Report"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# Report Details
+
+```{r}
+articleID <- "9-2-2015"
+reportType <- "Pilot"
+pilotNames <- "Lily Steyer"
+copilotNames <- "Leili Mortazavi"
+pilotTTC <- "45 +"
+copilotTTC <- "TBD"
+pilotStartDate <- "11/05/19"
+copilotStartDate <- "TBD"
+completionDate <- "TBD"
+```
+
+------
+
+#### Methods summary: 
+
+[PILOT/COPILOT write a brief summary of the methods underlying the target outcomes written in your own words]
+
+------
+
+#### Target outcomes: 
+
+[PILOT copy and paste the exact target outcomes as written in in targetOutcomes.md]  
+
+------
+
+[PILOT/COPILOT DO NOT CHANGE THE CODE IN THE CHUNK BELOW]  
+
+```{r global_options, include=FALSE}
+# sets up some formatting options for the R Markdown document
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+# Step 1: Load packages and prepare report object
+
+[PILOT/COPILOT Some useful packages are being loaded below. You can add any additional ones you might need too.]
+
+```{r}
+# load packages
+library(tidyverse) # for data munging
+library(knitr) # for kable table formating
+library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
+library(readxl) # import excel files
+library(ReproReports) # custom reporting functions
+```
+
+[PILOT/COPILOT DO NOT MAKE CHANGES TO THE CODE CHUNK BELOW]
+
+```{r}
+# Prepare report object. This will be updated automatically by the reproCheck function each time values are compared
+reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)
+```
+
+# Step 2: Load data
+
+```{r}
+```
+
+# Step 3: Tidy data
+
+```{r}
+```
+
+# Step 4: Run analysis
+
+## Pre-processing
+
+```{r}
+```
+
+## Descriptive statistics
+
+```{r}
+```
+
+## Inferential statistics
+
+```{r}
+```
+
+# Step 5: Conclusion
+
+[Please include a text summary describing your findings. If this reproducibility check was a failure, you should note any suggestions as to what you think the likely cause(s) might be.]
+
+
+[PILOT/COPILOT DOD NOT EDIT THE CODE CHUNK BELOW]
+
+```{r}
+reportObject <- reportObject %>%
+  filter(dummyRow == FALSE) %>% # remove the dummy row
+  select(-dummyRow) %>% # remove dummy row designation
+  mutate(articleID = articleID) %>% # add variables to report 
+  select(articleID, everything()) # make articleID first column
+
+# decide on final outcome
+if(any(reportObject$comparisonOutcome %in% c("MAJOR_ERROR", "DECISION_ERROR"))){
+  finalOutcome <- "Failure"
+}else{
+  finalOutcome <- "Success"
+}
+
+# collate report extra details
+reportExtras <- data.frame(articleID, pilotNames, copilotNames, pilotTTC, copilotTTC, pilotStartDate, copilotStartDate, completionDate, finalOutcome)
+
+# save report objects
+if(reportType == "pilot"){
+  write_csv(reportObject, "pilotReportDetailed.csv")
+  write_csv(reportExtras, "pilotReportExtras.csv")
+}
+
+if(reportType == "copilot"){
+  write_csv(reportObject, "copilotReportDetailed.csv")
+  write_csv(reportExtras, "copilotReportExtras.csv")
+}
+```
+
+# Session information
+
+[This function will output information about the package versions used in this report:]
+
+```{r session_info, include=TRUE, echo=TRUE, results='markup'}
+devtools::session_info()
+```
