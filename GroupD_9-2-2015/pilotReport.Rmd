@@ -13,7 +13,7 @@ articleID <- "9-2-2015"
 reportType <- "Pilot"
 pilotNames <- "Lily Steyer"
 copilotNames <- "Leili Mortazavi"
-pilotTTC <- "45 +"
+pilotTTC <- "90 +"
 copilotTTC <- "TBD"
 pilotStartDate <- "11/05/19"
 copilotStartDate <- "TBD"
@@ -24,17 +24,21 @@ completionDate <- "TBD"
 
 #### Methods summary: 
 
-[PILOT/COPILOT write a brief summary of the methods underlying the target outcomes written in your own words]
+In Experiment 1a, the authors examined whether participants (N=20) could report the attributes of an object they had consciously perceived only moments before. Using an experimental procedure programmed in MATLAB, participants were shown four items on a computer screen and asked to report the location of the target (a letter: A, B, C, D, or E) among a set of three distractors (numbers: 2, 3, 4, and/or 5). After completing multiple presurprise trials, there was a single surprise trial in which participants were asked to report both a critical attribute of the target (its identity: A, B, C, D, or E) and a task-irrelevant attribute of the target (its color: red, blue, yellow, or magenta) by selecting each attribute from a set of distractor attributes. In this surprise trial, the order of the identity and color selection tasks were counterbalanced across participants. If the participant could not identify the letter's identity, it would suggest attribute amnesia (i.e., that they had been consciously aware of the critical attribute, identity, moments prior but could not remember it). The surprise trial was followed by four control trials in which participants were asked to report the same critical and task-irrelevant attributes (identity and color) included in the surprise trial.
 
 ------
 
 #### Target outcomes: 
 
-[PILOT copy and paste the exact target outcomes as written in in targetOutcomes.md]  
+*Quoted from the targetOutcomes.md file:*
+
+"For this article you should focus on the findings reported in results section of Experiment 1a.
+
+Specifically, you should attempt to reproduce all descriptive and inferential analyses reported in the text below and associated tables/figures:
+
+On the presurprise trials, 89% of responses in the location task were correct, which indicates that participants could easily locate the target by using the critical attribute. To analyze the data from the surprise trial, we first divided participants into two groups defined by the order of the surprise tasks (identity task first vs. color task first). We found that the results were almost the same in these two groups. Accordingly, we combined the data for these groups in the analyses reported here. Only 6 of 20 (30%) participants correctly reported the color of the target letter, which is not much better than chance level of 25% (because there were four choices). Furthermore, performance on the identity task (25% correct) was exactly at chance level. These results demonstrate that participants were not capable of reporting a task-relevant attribute of a stimulus that had reached awareness less than 1 s before (i.e., attribute amnesia). Moreover, in the surprise trial, participants’ performance on the location task, unlike their performance on the color and identity tasks, was good (80% correct), and in fact was approximately as good as their performance on the location task in the presurprise trials (89% correct). This indicates that the poor performance on the color and identity tasks was not induced by the surprise test itself; it more likely reflects participants’ failure to remember these attributes. Participants exhibited a dramatic increase in reporting accuracy for the target letter’s color (70% correct) and identity (75% correct) on the first control trial (i.e., the trial immediately after the surprise trial). The improvement in each case was significant—color: 70% versus 30%, χ2(1, N = 40) = 6.40, p = .011, ϕ = .40; identity: 75% versus 25%, χ2(1, N = 40) = 10.00, p < .005, ϕ = .50. Performance on these two tasks remained constant on the final three control trials (color: 75%, 70%, and 80% correct; identity: 75%, 80%, and 75% correct). Participants’ performance on the location task was almost the same on the surprise trial (80% correct) as on the control trials (80%, 85%, 80%, and 70% correct). These results indicate a crucial role for expectation in controlling participants’ ability to report the attributes of a consciously perceived object. Therefore, Experiment 1a showed that when participants did not expect to report a particular attribute of an attended object, they were incapable of doing so, even when that same attribute had reached awareness immediately prior to the test."
 
 ------
-
-[PILOT/COPILOT DO NOT CHANGE THE CODE IN THE CHUNK BELOW]  
 
 ```{r global_options, include=FALSE}
 # sets up some formatting options for the R Markdown document
@@ -42,8 +46,6 @@ knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 ```
 
 # Step 1: Load packages and prepare report object
-
-[PILOT/COPILOT Some useful packages are being loaded below. You can add any additional ones you might need too.]
 
 ```{r}
 # load packages
@@ -54,8 +56,6 @@ library(readxl) # import excel files
 library(ReproReports) # custom reporting functions
 ```
 
-[PILOT/COPILOT DO NOT MAKE CHANGES TO THE CODE CHUNK BELOW]
-
 ```{r}
 # Prepare report object. This will be updated automatically by the reproCheck function each time values are compared
 reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)
@@ -64,36 +64,109 @@ reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = 
 # Step 2: Load data
 
 ```{r}
+data_dir <- paste0(getwd(), "/data/materials-9859-Top-level_materials")
+data1a <- read.table(file=paste0(data_dir, "/12022-Exp1.csv"), sep=",", header=TRUE, na.strings="", stringsAsFactors=FALSE)
 ```
 
 # Step 3: Tidy data
 
-```{r}
-```
+*Data is already tidy!*
 
 # Step 4: Run analysis
 
 ## Pre-processing
 
-```{r}
-```
+"To analyze the data from the surprise trial, we first divided participants into two groups defined by the order of the surprise tasks (identity task first vs. color task first). We found that the results were almost the same in these two groups. Accordingly, we combined the data for these groups in the analyses reported here."
+
+*Unfortunately, the data file provided by the authors does not contain information about the order of the surprise tasks. Therefore, we have to accept their assertion that the two groups (those who completed the identity task first vs. those who completed the color task first) were nearly identical.*
 
 ## Descriptive statistics
 
+"On the presurprise trials, 89% of responses in the location task were correct, which indicates that participants could easily locate the target by using the critical attribute."
+
 ```{r}
+# Filter presurprise trials (i.e., trials 1 thru 155) for each participant 
+presurprise <- data1a %>% 
+  filter(X1.1 < 156)
+
+# Examine mean location task accuracy for all presurprise trials
+presurprise %>% 
+  summarise(location_acc_pre = mean(X0.4))
+```
+
+"Only 6 of 20 (30%) participants correctly reported the color of the target letter, which is not much better than chance level of 25% (because there were four choices). Furthermore, performance on the identity task (25% correct) was exactly at chance level. These results demonstrate that participants were not capable of reporting a task-relevant attribute of a stimulus that had reached awareness less than 1 s before (i.e., attribute amnesia)."
+
+```{r}
+# Filter surprise trials (i.e., trial 155) for each participant 
+surprise <- data1a %>% 
+  filter(X1.1 == 156)
+
+# Examine accuracy of color report for all 20 surprise trials
+surprise %>% 
+  summarise(color_acc_sur = mean(X0.2))
+
+# Examine accuracy of identity report for all 20 surprise trials
+surprise %>% 
+  summarise(identity_acc_sur = mean(X0.3))
+```
+
+"Moreover, in the surprise trial, participants’ performance on the location task, unlike their performance on the color and identity tasks, was good (80% correct), and in fact was approximately as good as their performance on the location task in the presurprise trials (89% correct). This indicates that the poor performance on the color and identity tasks was not induced by the surprise test itself; it more likely reflects participants’ failure to remember these attributes."
+
+```{r}
+# Examine accuracy of location report for all 20 surprise trials
+surprise %>% 
+  summarise(location_acc_sur = mean(X0.4))
 ```
 
 ## Inferential statistics
 
+"Participants exhibited a dramatic increase in reporting accuracy for the target letter’s color (70% correct) and identity (75% correct) on the first control trial (i.e., the trial immediately after the surprise trial). The improvement in each case was significant—color: 70% versus 30%, χ2(1, N = 40) = 6.40, p = .011, ϕ = .40; identity: 75% versus 25%, χ2(1, N = 40) = 10.00, p < .005, ϕ = .50."
+
 ```{r}
+# Comparing color report accuracy of surprise vs. first control trials 
+t.test(data1a$X0.2[data1a$X1.1==156], data1a$X0.2[data1a$X1.1==157])
+
+# Comparing identity report accuracy of surprise vs. first control trials 
+t.test(data1a$X0.3[data1a$X1.1==156], data1a$X0.3[data1a$X1.1==157])
+
+chisq.test(data1a$X0.2[data1a$X1.1==156], data1a$X0.2[data1a$X1.1==157], correct = FALSE)
+```
+
+"Participants’ performance on the location task was almost the same on the surprise trial (80% correct) as on the control trials (80%, 85%, 80%, and 70% correct). These results indicate a crucial role for expectation in controlling participants’ ability to report the attributes of a consciously perceived object. Therefore, Experiment 1a showed that when participants did not expect to report a particular attribute of an attended object, they were incapable of doing so, even when that same attribute had reached awareness immediately prior to the test."
+
+```{r}
+# Filter control trials for all participants 
+control1 <- data1a %>% 
+  filter(X1.1 == 157)
+
+control2 <- data1a %>% 
+  filter(X1.1 == 158)
+
+control3 <- data1a %>% 
+  filter(X1.1 == 159)
+
+control4 <- data1a %>% 
+  filter(X1.1 == 160)
+
+# Examine mean location task accuracy for each control trial 
+control1 %>% 
+  summarise(location_acc_con1 = mean(X0.4))
+
+control2 %>% 
+  summarise(location_acc_con2 = mean(X0.4))
+
+control3 %>% 
+  summarise(location_acc_con3 = mean(X0.4))
+
+control4 %>% 
+  summarise(location_acc_con4 = mean(X0.4))
 ```
 
 # Step 5: Conclusion
 
-[Please include a text summary describing your findings. If this reproducibility check was a failure, you should note any suggestions as to what you think the likely cause(s) might be.]
+This reproducibility check can be considered a success, as all of the key target outcomes in the original paper were reproduced. The only target outcome not able to be reproduced was the authors' claim that...
 
-
-[PILOT/COPILOT DOD NOT EDIT THE CODE CHUNK BELOW]
+[PILOT/COPILOT DO NOT EDIT THE CODE CHUNK BELOW]
 
 ```{r}
 reportObject <- reportObject %>%
