@@ -90,8 +90,11 @@ presurprise <- data1a %>%
   filter(X1.1 < 156)
 
 # Examine mean location task accuracy for all presurprise trials
-presurprise %>% 
+location_acc_pre <- presurprise %>% 
   summarise(location_acc_pre = mean(X0.4))
+
+# Run ReproCheck on mean location task accuracy for all presurprise trials
+reportObject <- reproCheck(reportedValue = '.89', obtainedValue = location_acc_pre, valueType = 'mean')
 ```
 
 "Only 6 of 20 (30%) participants correctly reported the color of the target letter, which is not much better than chance level of 25% (because there were four choices). Furthermore, performance on the identity task (25% correct) was exactly at chance level. These results demonstrate that participants were not capable of reporting a task-relevant attribute of a stimulus that had reached awareness less than 1 s before (i.e., attribute amnesia)."
@@ -102,20 +105,29 @@ surprise <- data1a %>%
   filter(X1.1 == 156)
 
 # Examine accuracy of color report for all 20 surprise trials
-surprise %>% 
+color_acc_sur <- surprise %>% 
   summarise(color_acc_sur = mean(X0.2))
 
+# Run ReproCheck on mean color report accuracy for all 20 surprise trials
+reportObject <- reproCheck(reportedValue = '.30', obtainedValue = color_acc_sur, valueType = 'mean')
+
 # Examine accuracy of identity report for all 20 surprise trials
-surprise %>% 
+identity_acc_sur <- surprise %>% 
   summarise(identity_acc_sur = mean(X0.3))
+
+# Run ReproCheck on mean color report accuracy for all 20 surprise trials
+reportObject <- reproCheck(reportedValue = '.25', obtainedValue = identity_acc_sur, valueType = 'mean')
 ```
 
 "Moreover, in the surprise trial, participants’ performance on the location task, unlike their performance on the color and identity tasks, was good (80% correct), and in fact was approximately as good as their performance on the location task in the presurprise trials (89% correct). This indicates that the poor performance on the color and identity tasks was not induced by the surprise test itself; it more likely reflects participants’ failure to remember these attributes."
 
 ```{r}
 # Examine accuracy of location report for all 20 surprise trials
-surprise %>% 
+location_acc_sur <- surprise %>% 
   summarise(location_acc_sur = mean(X0.4))
+
+# Run ReproCheck on mean location report accuracy for all 20 surprise trials
+reportObject <- reproCheck(reportedValue = '.80', obtainedValue = location_acc_sur, valueType = 'mean')
 ```
 
 ## Inferential statistics
@@ -123,13 +135,65 @@ surprise %>%
 "Participants exhibited a dramatic increase in reporting accuracy for the target letter’s color (70% correct) and identity (75% correct) on the first control trial (i.e., the trial immediately after the surprise trial). The improvement in each case was significant—color: 70% versus 30%, χ2(1, N = 40) = 6.40, p = .011, ϕ = .40; identity: 75% versus 25%, χ2(1, N = 40) = 10.00, p < .005, ϕ = .50."
 
 ```{r}
-# Comparing color report accuracy of surprise vs. first control trials 
-t.test(data1a$X0.2[data1a$X1.1==156], data1a$X0.2[data1a$X1.1==157])
+# Filter surprise and first control trial into a new dataframe
+surprise_control <- data1a %>% 
+  filter(X1.1 == 156 | X1.1 == 157)
 
-# Comparing identity report accuracy of surprise vs. first control trials 
-t.test(data1a$X0.3[data1a$X1.1==156], data1a$X0.3[data1a$X1.1==157])
+## Color report inferential statistics
 
-chisq.test(data1a$X0.2[data1a$X1.1==156], data1a$X0.2[data1a$X1.1==157], correct = FALSE)
+# Group by trial type and calculate mean color report accuracy
+surprise_control %>% 
+  group_by(X1.1) %>%
+  summarise(color_means = mean(X0.2))
+
+# Run ReproCheck on mean color report accuracy for suprise vs. first control trials
+reportObject <- reproCheck(reportedValue = ".30", obtainedValue = ".30", valueType = "mean")
+reportObject <- reproCheck(reportedValue = ".70", obtainedValue = ".70", valueType = "mean")
+
+# Group by trial type and calculate # of correct and incorrect answers for color report task
+color_compare <- surprise_control %>% 
+  group_by(X1.1) %>%
+  summarise(color_correct = sum(X0.2), 
+            color_incorrect = 20 - sum(X0.2)) %>%
+  select(-c(X1.1))
+        
+# Run chi-square test on color accuracy of surprise vs. first control trials
+color_chi <- chisq.test(color_compare, correct = FALSE)
+color_chi
+
+# Run ReproCheck on chi-square of color report accuracy for suprise vs. first control trials
+reportObject <- reproCheck(reportedValue = "6.40", obtainedValue = color_chi[1], valueType = "other")
+
+# Run ReproCheck on p-value of color report accuracy for suprise vs. first control trials
+reportObject <- reproCheck(reportedValue = "0.011", obtainedValue = color_chi[3], valueType = "p")
+
+## Identity report inferential statistics
+
+# Group by trial type and calculate mean identity report accuracy
+surprise_control %>% 
+  group_by(X1.1) %>%
+  summarise(color_means = mean(X0.3))
+
+# Run ReproCheck on mean color report accuracy for suprise vs. first control trials
+reportObject <- reproCheck(reportedValue = ".25", obtainedValue = ".25", valueType = "mean")
+reportObject <- reproCheck(reportedValue = ".75", obtainedValue = ".75", valueType = "mean")
+
+# Group by trial type and calculate # of correct and incorrect answers for identity report task
+identity_compare <- surprise_control %>% 
+  group_by(X1.1) %>%
+  summarise(identity_correct = sum(X0.3), 
+            identity_incorrect = 20 - sum(X0.3)) %>%
+  select(-c(X1.1))
+        
+# Run chi-square test on color accuracy of surprise vs. first control trials
+identity_chi <- chisq.test(identity_compare, correct = FALSE)
+identity_chi
+
+# Run ReproCheck on chi-square of color report accuracy for suprise vs. first control trials
+reportObject <- reproCheck(reportedValue = "10.00", obtainedValue = identity_chi[1], valueType = "other")
+
+# Run ReproCheck on p-value of color report accuracy for suprise vs. first control trials
+reportObject <- reproCheck(reportedValue = "<.005", obtainedValue = "0.001565", valueType = "p", eyeballCheck = TRUE)
 ```
 
 "Participants’ performance on the location task was almost the same on the surprise trial (80% correct) as on the control trials (80%, 85%, 80%, and 70% correct). These results indicate a crucial role for expectation in controlling participants’ ability to report the attributes of a consciously perceived object. Therefore, Experiment 1a showed that when participants did not expect to report a particular attribute of an attended object, they were incapable of doing so, even when that same attribute had reached awareness immediately prior to the test."
@@ -149,17 +213,26 @@ control4 <- data1a %>%
   filter(X1.1 == 160)
 
 # Examine mean location task accuracy for each control trial 
-control1 %>% 
+location_acc_con1 <- control1 %>% 
   summarise(location_acc_con1 = mean(X0.4))
 
-control2 %>% 
+location_acc_con2 <- control2 %>% 
   summarise(location_acc_con2 = mean(X0.4))
 
-control3 %>% 
+location_acc_con3 <- control3 %>% 
   summarise(location_acc_con3 = mean(X0.4))
 
-control4 %>% 
+location_acc_con4 <- control4 %>% 
   summarise(location_acc_con4 = mean(X0.4))
+
+# Run ReproCheck on mean location report accuracy for each control trial
+reportObject <- reproCheck(reportedValue = '.80', obtainedValue = location_acc_con1, valueType = 'mean')
+
+reportObject <- reproCheck(reportedValue = '.85', obtainedValue = location_acc_con2, valueType = 'mean')
+
+reportObject <- reproCheck(reportedValue = '.80', obtainedValue = location_acc_con3, valueType = 'mean')
+
+reportObject <- reproCheck(reportedValue = '.70', obtainedValue = location_acc_con4, valueType = 'mean')
 ```
 
 # Step 5: Conclusion
