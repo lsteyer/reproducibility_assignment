@@ -237,7 +237,7 @@ reportObject <- reproCheck(reportedValue = '.70', obtainedValue = location_acc_c
 
 # Step 5: Conclusion
 
-This reproducibility check can be considered a success, as all of the key target outcomes in the original paper were reproduced. The only target outcome not able to be reproduced was the authors' claim that...
+This reproducibility check can be considered a success, as all of the key target outcomes in the original paper were reproduced. The only target outcome not able to be reproduced was the authors' claim that the order of the surprise tasks (color first vs. identity first) had very little effect on results; without information about the task order, we were unable to verify that specific claim. 
 
 [PILOT/COPILOT DO NOT EDIT THE CODE CHUNK BELOW]
 
