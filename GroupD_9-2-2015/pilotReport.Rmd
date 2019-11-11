@@ -17,7 +17,7 @@ pilotTTC <- "270"
 copilotTTC <- "TBD"
 pilotStartDate <- "11/05/19"
 copilotStartDate <- "11/08/19"
-completionDate <- "TBD"
+completionDate <- "11/10/19"
 ```
 
 ------
