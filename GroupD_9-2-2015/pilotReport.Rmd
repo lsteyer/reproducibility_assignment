@@ -13,10 +13,10 @@ articleID <- "9-2-2015"
 reportType <- "Pilot"
 pilotNames <- "Lily Steyer"
 copilotNames <- "Leili Mortazavi"
-pilotTTC <- "90 +"
+pilotTTC <- "270"
 copilotTTC <- "TBD"
 pilotStartDate <- "11/05/19"
-copilotStartDate <- "TBD"
+copilotStartDate <- "11/08/19"
 completionDate <- "TBD"
 ```
 
