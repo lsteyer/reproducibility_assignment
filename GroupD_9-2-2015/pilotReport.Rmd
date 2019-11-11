@@ -10,7 +10,7 @@ output:
 
 ```{r}
 articleID <- "9-2-2015"
-reportType <- "Pilot"
+reportType <- "pilot"
 pilotNames <- "Lily Steyer"
 copilotNames <- "Leili Mortazavi"
 pilotTTC <- "270"
